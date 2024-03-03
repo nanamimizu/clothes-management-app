@@ -28,6 +28,12 @@ jobs:
       resource_class: medium
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build React App
+          command: npm run build
       # CircleCI に登録した秘密鍵を呼び出す
       - add_ssh_keys
       - run:
