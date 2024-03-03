@@ -25,6 +25,9 @@ jobs:
       resource_class: medium
     steps:
       - checkout
+      - run:
+          name: Show current directory
+          command: pwd
       # CircleCI に登録した秘密鍵を呼び出す
       - add_ssh_keys
       # CircleCI に登録した環境変数を使って SSH
