@@ -13,6 +13,7 @@ jobs:
   build:
     docker:
       - image: alpine
+    working_directory: ~/workspace
     steps:
       - checkout
       - run:
@@ -23,7 +24,6 @@ jobs:
     machine:
       image: ubuntu-2004:202008-01
       resource_class: medium
-      working_directory: ~/workspace
     steps:
       - checkout
       - run:
