@@ -12,12 +12,15 @@ jobs:
   # build ジョブ: CircleCI 上で Docker コンテナを作成してテストする
   build:
     docker:
-      - image: alpine
+      - image: node:20
     steps:
       - checkout
       - run:
-          name: Echo Test
-          command: echo "CircleCI Test"
+          name: Install dependencies
+          command: npm install
+      - run:
+          name: Build React App
+          command: npm run build
   # deploy ジョブ: EC2 に SSH 接続して、デプロイを実行する
   deploy:
     machine:
@@ -25,13 +28,11 @@ jobs:
       resource_class: medium
     steps:
       - checkout
-      - run:
-          name: Show current directory
-          command: pwd
       # CircleCI に登録した秘密鍵を呼び出す
       - add_ssh_keys
-      # CircleCI に登録した環境変数を使って SSH
-      - run: ssh ${USER_NAME}@${HOST_NAME} 'cd work/clothes-management-app && git pull origin main'
+      - run:
+          name: Deploy to EC2
+          command: scp -r ./build ${USER_NAME}@${HOST_NAME}:/var/www/html
 workflows:
   version: 2
   # build_and_deploy ジョブ: 一番最初に呼ばれるジョブ
