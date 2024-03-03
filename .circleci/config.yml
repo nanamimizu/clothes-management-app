@@ -22,6 +22,7 @@ jobs:
   deploy:
     machine:
       image: circleci/classic:edge
+      resource_class: medium
     steps:
       - checkout
       # CircleCI に登録した秘密鍵を呼び出す
