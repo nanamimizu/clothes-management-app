@@ -26,9 +26,7 @@ jobs:
     steps:
       - checkout
       # CircleCI に登録した秘密鍵を呼び出す
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:a7G8hJYTUUEMXdKPJBARChzuAYuM7KBBH2yrhAx1zSQ" # SSHキーの指紋を指定してください
+      - add_ssh_keys
       # CircleCI に登録した環境変数を使って SSH
       - run: ssh ${USER_NAME}@${HOST_NAME} "pwd && cd $CIRCLE_WORKING_DIRECTORY/clothes-management-app && pwd && git pull"
 workflows:
