@@ -2,25 +2,46 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/configuration-reference/#jobs
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/orb-intro/
+orbs:
+  # See the Node orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
+  node: circleci/node@5.2
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/configuration-reference/#executor-job
+  # build ジョブ: CircleCI 上で Docker コンテナを作成してテストする
+  build:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/configuration-reference/#steps
+      - image: alpine
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/configuration-reference/#workflows
+          name: Echo Test
+          command: echo "CircleCI Test"
+  # deploy ジョブ: EC2 に SSH 接続して、デプロイを実行する
+  deploy:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - checkout
+      # CircleCI に登録した秘密鍵を呼び出す
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:a7G8hJYTUUEMXdKPJBARChzuAYuM7KBBH2yrhAx1zSQ" # SSHキーの指紋を指定してください
+      # CircleCI に登録した環境変数を使って SSH
+      - run: ssh ${USER_NAME}@${HOST_NAME} 'cd clothes-management-app && git pull'
 workflows:
-  say-hello-workflow:
+  version: 2
+  # build_and_deploy ジョブ: 一番最初に呼ばれるジョブ
+  build_and_deploy:
+    # build ジョブと deploy ジョブを登録する
     jobs:
-      - say-hello
+      - build
+      - deploy:
+          requires:
+            # 依存性あるから deploy ジョブより先に build ジョブを実行してね、という命令
+            - build
+          # master ブランチに push された場合のみ deploy ジョブを実行する
+          filters:
+            branches:
+              only: main
