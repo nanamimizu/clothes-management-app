@@ -20,9 +20,9 @@ jobs:
           command: echo "CircleCI Test"
   # deploy ジョブ: EC2 に SSH 接続して、デプロイを実行する
   deploy:
-    machine:
-      image: circleci/classic:edge
-      resource_class: medium
+    docker:
+      - image: circleci/classic:edge
+    resource_class: medium
     steps:
       - checkout
       # CircleCI に登録した秘密鍵を呼び出す
