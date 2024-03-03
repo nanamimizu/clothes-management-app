@@ -28,7 +28,7 @@ jobs:
       # CircleCI に登録した秘密鍵を呼び出す
       - add_ssh_keys
       # CircleCI に登録した環境変数を使って SSH
-      - run: ssh ${USER_NAME}@${HOST_NAME} "pwd && cd $CIRCLE_WORKING_DIRECTORY/clothes-management-app && pwd && git pull"
+      - run: ssh ${USER_NAME}@${HOST_NAME} 'cd /home/circleci/project && git pull'
 workflows:
   version: 2
   # build_and_deploy ジョブ: 一番最初に呼ばれるジョブ
