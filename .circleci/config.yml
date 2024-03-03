@@ -22,8 +22,7 @@ jobs:
   # deploy ジョブ: EC2 に SSH 接続して、デプロイを実行する
   deploy:
     machine:
-      image: ubuntu-2004:202008-01
-      resource_class: medium
+      image: circleci/classic:edge
     steps:
       - checkout
       - run:
