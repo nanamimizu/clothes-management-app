@@ -37,6 +37,9 @@ jobs:
       # CircleCI に登録した秘密鍵を呼び出す
       - add_ssh_keys
       - run:
+          name: create dir
+          command: ssh ${USER_NAME}@${HOST_NAME} 'mkdir -p /myapp/'
+      - run:
           name: Deploy to EC2
           command: scp -r ./build/* ${USER_NAME}@${HOST_NAME}:/myapp/
 workflows:
